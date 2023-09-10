@@ -1,0 +1,56 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Cabinet {
+  id          Int       @id @default(autoincrement())
+  ip          String?   @default("0.0.0.0")
+  type        String?   @default("unknown")
+  slots       Int
+  qrCode      String
+  online      Boolean
+  emptySlots  Int
+  busySlots   Int
+  shopId      Int?
+  signal      String?
+  posDeviceId Int?
+  batteries   Battery[]
+  orders      Order[]
+}
+
+model Battery {
+  batteryId Int      @id @default(autoincrement())
+  cabinetId Int?
+  cabinet   Cabinet? @relation(fields: [cabinetId], references: [id])
+  slotNum   Int?
+  vol       Int
+  orders    Order[]
+}
+
+model Order {
+  orderId       Int      @id @default(autoincrement())
+  batteryId     Int
+  battery       Battery? @relation(fields: [batteryId], references: [batteryId])
+  cabinetId     Int
+  cabinet       Cabinet? @relation(fields: [cabinetId], references: [id])
+  dailyMaxPrice Int?
+  freeMinutes   Int?
+  borrowTime    DateTime
+  price         Int?
+  currency      String?  @default("sgd")
+  deviceType    String?  @default("unknown")
+  priceMinute   String?
+  callbackUrl   String?
+  borrowSlot    Int
+  returnTime    DateTime
+  borrowStatus  Int
+  deposit       Int?
+}

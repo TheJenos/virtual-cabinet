@@ -50,7 +50,7 @@ model Order {
   priceMinute   String?
   callbackUrl   String?
   borrowSlot    Int
-  returnTime    DateTime
+  returnTime    DateTime?
   borrowStatus  Int
   deposit       Int?
 }

@@ -12,12 +12,12 @@ export default async function action(
       msg: 'Successful operation',
       data: await prisma.order.findFirst({
         where: {
-          orderId: parseInt(req.query.tradeNo as string),
+          orderId: req.query.tradeNo as string,
         },
       }),
     })
   } catch (error: any) {
-    res.status(500).send({
+    res.status(200).send({
       msg: error.message,
       code: 1,
     })

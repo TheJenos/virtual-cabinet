@@ -12,13 +12,13 @@ export default async function action(
       msg: 'Successful operation',
       data: await prisma.order.findMany({
         orderBy: {
-          orderId: 'desc',
+          id: 'desc',
         },
         take: 20,
       }),
     })
   } catch (error: any) {
-    res.status(500).send({
+    res.status(200).send({
       msg: error.message,
       code: 1,
     })

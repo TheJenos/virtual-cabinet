@@ -26,8 +26,8 @@ model Cabinet {
   orders      Order[]
 }
 
-model Battery {
-  batteryId Int      @id @default(autoincrement())
+model Battery {       
+  batteryId String @id
   cabinetId Int?
   cabinet   Cabinet? @relation(fields: [cabinetId], references: [id])
   slotNum   Int?
@@ -36,17 +36,18 @@ model Battery {
 }
 
 model Order {
-  orderId       Int      @id @default(autoincrement())
-  batteryId     Int
-  battery       Battery? @relation(fields: [batteryId], references: [batteryId])
+  id            Int       @id @default(autoincrement())
+  orderId       String       
+  batteryId     String
+  battery       Battery?  @relation(fields: [batteryId], references: [batteryId])
   cabinetId     Int
-  cabinet       Cabinet? @relation(fields: [cabinetId], references: [id])
+  cabinet       Cabinet?  @relation(fields: [cabinetId], references: [id])
   dailyMaxPrice Int?
   freeMinutes   Int?
   borrowTime    DateTime
   price         Int?
-  currency      String?  @default("sgd")
-  deviceType    String?  @default("unknown")
+  currency      String?   @default("sgd")
+  deviceType    String?   @default("unknown")
   priceMinute   String?
   callbackUrl   String?
   borrowSlot    Int

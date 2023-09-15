@@ -10,10 +10,11 @@ export default async function action(
 ) {
   try {
     await prisma.$transaction(async (tx) => {
-      const body = req.body
+      const body = req.query
+      console.log(body);
       const cabinet = await prisma.cabinet.findFirst({
         where: {
-          id: body.deviceId,
+          id: parseInt(body.deviceId as string),
         },
         include: {
           batteries: true,
@@ -39,12 +40,13 @@ export default async function action(
 
       const newTrade = await prisma.order.create({
         data: {
+          orderId: (Math.random() + 1).toString(36).substring(7),
           batteryId: battery.batteryId,
           borrowSlot: battery.slotNum || 0,
           borrowTime: moment().utc().add(2.5, 'h').toDate(),
           borrowStatus: 1,
           cabinetId: cabinet.id,
-          callbackUrl: body.callbackURL,
+          callbackUrl: body.callbackURL as string,
         },
       })
 
@@ -52,7 +54,7 @@ export default async function action(
         const form = new FormData()
         form.set('status', '1')
         form.set('tradeNo', newTrade.orderId.toString())
-        axios.post(body.callbackURL, form)
+        axios.post(body.callbackURL as string, form)
       }, 2000)
 
       res.json({
@@ -64,7 +66,8 @@ export default async function action(
       })
     })
   } catch (error: any) {
-    res.status(500).send({
+    console.log(error);
+    res.status(200).send({
       msg: error.message,
       code: 1,
     })

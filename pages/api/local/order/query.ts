@@ -20,7 +20,7 @@ export default async function action(
       }),
     })
   } catch (error: any) {
-    res.status(500).send({
+    res.status(200).send({
       msg: error.message,
       code: 1,
     })

@@ -42,7 +42,7 @@ export default function BatterySlot({
     axios.post('/api/local/order/return', {
       cabinetId,
       slotNum,
-      batteryId: parseInt(e.dataTransfer?.getData('batteryId') || '0'),
+      batteryId: e.dataTransfer?.getData('batteryId') || '0',
     })
   }
 

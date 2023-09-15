@@ -1,7 +1,7 @@
 import prisma from '@/prisma/prisma'
 import moment from 'moment-timezone'
 import { NextApiRequest, NextApiResponse } from 'next'
-import { ResponseData } from '..'
+import { ResponseData } from '../..'
 import axios from 'axios'
 
 export default async function action(
@@ -39,18 +39,20 @@ export default async function action(
 
         if (ongoingOrder) {
           ongoingOrder.returnTime = moment().utc().add(2.5, 'h').toDate()
-          ongoingOrder.borrowStatus = 2
+          ongoingOrder.borrowStatus = 3
           await prisma.order.update({
             data: ongoingOrder,
             where: {
-              orderId: ongoingOrder.orderId,
+              id: ongoingOrder.id,
             },
           })
 
-          const form = new FormData()
-          form.set('status', '2')
-          form.set('tradeNo', ongoingOrder.orderId.toString())
-          await axios.post(ongoingOrder.callbackUrl || '', form)
+          if (ongoingOrder.callbackUrl) {
+            const form = new FormData()
+            form.set('status', '2')
+            form.set('tradeNo', ongoingOrder.orderId.toString())
+            await axios.post(ongoingOrder.callbackUrl || '', form)
+          }
         }
 
         await prisma.battery.update({
@@ -79,7 +81,7 @@ export default async function action(
       })
     })
   } catch (error: any) {
-    res.status(500).send({
+    res.status(200).send({
       msg: error.message,
       code: 1,
     })

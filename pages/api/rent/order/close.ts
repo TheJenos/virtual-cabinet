@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { ResponseData } from '../..'
 
-export default async function action(res: NextApiResponse<ResponseData>) {
+export default async function action(_:any,res: NextApiResponse<ResponseData>) {
   try {
     res.json({
       code: 0,
@@ -9,7 +9,7 @@ export default async function action(res: NextApiResponse<ResponseData>) {
       data: [],
     })
   } catch (error: any) {
-    res.status(500).send({
+    res.status(200).send({
       msg: error.message,
       code: 1,
     })
